@@ -2,7 +2,7 @@ import express from 'express'
 import axiosObject from "./httplibrary"
 const app=express()
 
-console.log(axiosObject)
+
 
 const config={
     method:"get",
@@ -28,7 +28,7 @@ const config={
 
 try {
     
-    axiosObject.makeRequest(config)
+    axiosObject.makeRequest(config,{name:"Shubham"})
     .then((data)=>console.log("got the response"))
     .catch((error)=>console.log("I am in error",error))  
 } catch (error) {

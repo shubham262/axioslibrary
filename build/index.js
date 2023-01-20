@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const httplibrary_1 = __importDefault(require("./httplibrary"));
 const app = (0, express_1.default)();
-console.log(httplibrary_1.default);
 const config = {
     method: "get",
     url: "https://jsonplaceholder.typicode.com/posts",
@@ -23,7 +22,7 @@ const config = {
 //     data:datas,
 // }
 try {
-    httplibrary_1.default.makeRequest(config)
+    httplibrary_1.default.makeRequest(config, { name: "Shubham" })
         .then((data) => console.log("got the response"))
         .catch((error) => console.log("I am in error", error));
 }

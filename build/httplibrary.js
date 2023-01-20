@@ -17,15 +17,29 @@ class axiosHandler {
     constructor() {
         this.count = 0;
     }
-    makeRequest(config) {
+    makeRequest(config, params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let time = 0;
+                if (config.method == 'post' || config.method == 'put' || config.method == 'patch') {
+                    if (!config.data || Object.keys(JSON.parse(config.data)).length == 0) {
+                        console.log("hi");
+                        return "data not passed,please pass data after stringifying it";
+                    }
+                }
+                //changing url according to params
+                if (params && !config.url.includes('?')) {
+                    config.url += "?";
+                    for (let i in params) {
+                        let y = params[i];
+                        config.url += `${i}=${y}&`;
+                    }
+                }
                 //timing part
+                let time = 0;
                 let id = setInterval(() => {
                     time++;
                 }, 1);
-                const result = yield (0, axios_1.default)(Object.assign(Object.assign({}, config), { timeout: 1000 }));
+                const result = yield (0, axios_1.default)(Object.assign(Object.assign({}, config), { timeout: 5000 }));
                 clearInterval(id);
                 //consoling the details
                 console.table([{ method: config.method, url: config.url, date: new Date(), response: result.data, time: `${time}ms` }]);
@@ -34,9 +48,9 @@ class axiosHandler {
             catch (error) {
                 //retrying part
                 if (this.count < 5) {
-                    console.log("hi", this.count);
+                    console.log("api is working slow", this.count);
                     this.count++;
-                    yield this.makeRequest(config);
+                    yield this.makeRequest(config, params);
                 }
                 return error;
             }
