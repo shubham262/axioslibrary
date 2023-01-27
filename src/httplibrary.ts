@@ -1,60 +1,29 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-class axiosHandler{
+export async function makeRequest(config:AxiosRequestConfig) {
 
-    public count: any;
-    
-    constructor(){
-    this.count=0
-    
-    }
-   
-    async makeRequest(config:{method:string,url:string,data?:string},params?:any){
-    try {
-        
-        if(config.method=='post'||config.method=='put'||config.method=='patch'){
-            if(!config.data ||  Object.keys(JSON.parse(config.data)).length==0){
-                console.log("hi")
-                return "data not passed,please pass data after stringifying it"
-            }
+    return new Promise((resolve, reject) => {
+
+        if(config.method!=='get' && config.method!=='post' && config.method!=='put' && config.method!=='delete' && config.method!=='patch'){
+            reject("Pass correct method")
         }
-        //changing url according to params
-        if(params && !config.url.includes('?')){
-            config.url+="?"
-            for(let i in params){
-            let y =params[i] 
-            config.url+=`${i}=${y}&`
-            }
-            
-        }
+
+
         
-        //timing part
+         //timing part
         let time:number=0
         let id=setInterval(()=>{
             time++
         },1) 
-            
-        const result:any=await axios({...config,timeout:5000})
+
+        axios(config).then((result)=>{
         clearInterval(id)
         //consoling the details
         console.table([{method:config.method,url:config.url,date:new Date(),response:result.data,time:`${time}ms`}])
-            
-        return result.data
-        
-        } catch (error) {
-        //retrying part
-        if(this.count<5){
-            console.log("api is working slow",this.count)
-            this.count++
-            await this.makeRequest(config,params)
-        }
-        
-        return error
-        
-        } 
-}
-}
+        resolve(result.data)
+        }).catch((err)=>{
+        console.table([{method:config.method,url:config.url,date:new Date(),response:"failed"}])
+        reject(err)})
 
-
-const obj=new axiosHandler()
-export default obj;
+    })
+}

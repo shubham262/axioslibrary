@@ -1,43 +1,24 @@
 import express from 'express'
-import axiosObject from "./httplibrary"
+import {bot} from "./Retry"
 const app=express()
-
-
 
 const config={
     method:"get",
-    url:"https://jsonplaceholder.typicode.com/posts",
-    data:JSON.stringify({}),
-    
-
+    baseURL:"https://httpbin.org",
+    url:"/get",
+    data:{},
+    params: {
+        ID: 12345
+      },
 }
 
-// const datas= JSON.stringify({
-//     title: 'foo',
-//     body: 'bar',
-//     userId: 1,
-//   })
+   bot(config)
+    .then((data)=>console.log("got the response indexts,",data))
+    .catch((error)=>console.log("I am in error,",error))  
 
-// const config={
-//     method:"POST",
-//     url:"https://jsonplaceholder.typicode.com/posts",
-//     data:datas,
-
-// }
-
-
-try {
-    
-    axiosObject.makeRequest(config,{name:"Shubham"})
-    .then((data)=>console.log("got the response"))
-    .catch((error)=>console.log("I am in error",error))  
-} catch (error) {
-    console.log("heree",error)
-}
-
-
-
-
+    //wrap it inside async function
+    //then we can write 
+    // const result= await bot(config)
 
 app.listen('3000',()=>{
     console.log("server running at port 3000")
