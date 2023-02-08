@@ -1,13 +1,13 @@
 {
   "name": "axioslibrary",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "A library that can handle all the type of request using axios.",
   "main": "./build/library.js",
   "scripts": {
     "start": "node ./build/index.js",
     "build": "tsc -p .",
     "dev": "nodemon ./src/index.ts",
-    "test": "mocha './test/*.spec.js' "
+    "test": "mocha './test/*.spec.ts' "
   },
   "author": "Shubham Manohar",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "url": "https://github.com/shubham262/axioslibrary"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/node-fetch": "^2.6.2"
   }
 }
