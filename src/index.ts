@@ -1,18 +1,24 @@
 import express from 'express'
-import {bot} from "./Retry"
+import {bot} from "./library"
 const app=express()
 
 const config={
     method:"get",
     baseURL:"https://httpbin.org",
     url:"/get",
-    data:{},
+    data:{ title: 'foo',body: 'bar',userId: 1,},
     params: {
-        ID: 12345
+        ID: 12345,
+        
       },
+      retry:true,
+      retries:5,
+      usage:"axios",
+      timeout:5000
 }
 
-   bot(config)
+
+    bot(config)
     .then((data)=>console.log("got the response indexts,",data))
     .catch((error)=>console.log("I am in error,",error))  
 

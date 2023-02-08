@@ -4,18 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const Retry_1 = require("./Retry");
+const library_1 = require("./library");
 const app = (0, express_1.default)();
 const config = {
     method: "get",
     baseURL: "https://httpbin.org",
     url: "/get",
-    data: {},
+    data: { title: 'foo', body: 'bar', userId: 1, },
     params: {
-        ID: 12345
+        ID: 12345,
     },
+    retry: true,
+    retries: 5,
+    usage: "axios",
+    timeout: 5000
 };
-(0, Retry_1.bot)(config)
+(0, library_1.bot)(config)
     .then((data) => console.log("got the response indexts,", data))
     .catch((error) => console.log("I am in error,", error));
 //wrap it inside async function

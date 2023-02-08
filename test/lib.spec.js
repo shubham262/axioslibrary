@@ -1,58 +1,34 @@
-const {makeRequest}=require("../build/httplibrary")
-const  {bot} =require("../build/Retry")
+
+const  {bot} =require("../build/library")
 
 const chai=require('chai')
 const expect=chai.expect
-
-
-describe('testing the library', function () {
-    
-    it(" get method",async function(){
-    
-    const result= await bot({ method:"get",url:"https://jsonplaceholder.typicode.com/posts",data:JSON.stringify({}),})
-    expect(result).to.be.an('array')
-    })
-
-
-
-
-    it(" post method ",async function(){
+const config={
+    method:"get",
+    baseURL:"https://httpbin.org",
+    url:"",
+    data:{},
+    params: {
+        ID: 12345,
         
-        const result= await bot({ method:"post",url:"https://jsonplaceholder.typicode.com/posts",data:JSON.stringify({ title: 'foo',body: 'bar',userId: 1,}),})
-        
-        expect(result).to.be.an('object')
-        })
-
-     it(" delete method",async function(){
-        
-        const result= await bot({ method:"delete",url:"https://jsonplaceholder.typicode.com/posts/1",data:JSON.stringify({}),})
-        expect(result).to.be.an('object')
-        })
-
-
-    it("put method",async function(){
-        
-            const result= await bot({ method:"put",url:"https://jsonplaceholder.typicode.com/posts/1",data:JSON.stringify({id: 1,title: 'foo',body: 'bar',userId: 1,})})
-            expect(result).to.be.an('object')
-            })
-
-
-});
-
-
+      },
+      retry:true,
+      retries:5,
+      usage:"node",
+      timeout:5000
+}
+// it('works', function(done) {
+//     get('http://httpbin.org/get?answer=42').
+//       then(res => {
+//         assert.equal(res.data.args.answer, 42);
+//         // `done()` with no parameters means the test succeeded
+//         done();
+//       }).
+//       // If you pass a parameter to `done()`, Mocha considers that an error
+//       catch(err => done(err));
+//   });
 describe('testing the using http bin', function () {
-
-    const config={
-        method:"",
-        baseURL:"https://httpbin.org",
-        url:"",
-        data:{},
-        params: {
-            ID: '12345'
-          },
-    
-    }
-    it("get method",async function(){
+     it("get method",async function(){
         config.method="get"
         config.url="/get"
         
@@ -95,8 +71,44 @@ describe('testing the using http bin', function () {
         const result= await bot(config)
         expect(result.args).to.deep.equal({ID: '12345'})
     })
-
-
-
-
 })
+
+
+describe('testing the library', function () {
+    
+    it(" get method",async function(){
+        config.method="get"
+        config.url="/get"
+    const result= await bot(config)
+    expect(result).to.be.an('object')
+    })
+
+
+
+
+    it(" post method ",async function(){
+        config.method="post"
+        config.url="/post"
+        const result= await bot(config)
+        
+        expect(result).to.be.an('object')
+        })
+
+     it(" delete method",async function(){
+        config.method="delete"
+        config.url="/delete"
+        const result= await bot(config)
+        expect(result).to.be.an('object')
+        })
+
+
+    it("put method",async function(){
+            config.method="put"
+            config.url="/put"
+            const result= await bot(config)
+            expect(result).to.be.an('object')
+            })
+
+
+});
+
