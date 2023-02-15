@@ -8,29 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AxiosRequest = void 0;
-const axios_1 = __importDefault(require("axios"));
-function AxiosRequest(config) {
+exports.retry = void 0;
+function retry(callback, parameters, retries, type) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const controller = new AbortController();
-        // config.signal=controller.signal
-        // const timer = setTimeout(() => {
-        //     controller.abort();
-        // }, config.timeout);
+        const retryCodes = [408, 500, 502, 503, 504, 522, 524];
         let result;
-        try {
-            result = yield (0, axios_1.default)(config);
+        let i = 1;
+        while (i <= retries) {
+            try {
+                console.log(`Executing the request for the ${i}th time`);
+                result = yield callback(parameters);
+                result = type ? result.data : result.json();
+                return result;
+            }
+            catch (error) {
+                const statusCode = error.status || error.response.status;
+                result = error;
+                if (retryCodes.includes(statusCode))
+                    i++;
+                else {
+                    throw result;
+                }
+            }
         }
-        catch (error) {
-            if (error.code === 'ECONNABORTED')
-                throw { message: "request failed", error, status: 500 };
-            throw error;
-        }
-        return result;
+        throw result;
     });
 }
-exports.AxiosRequest = AxiosRequest;
+exports.retry = retry;

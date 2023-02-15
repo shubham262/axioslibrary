@@ -1,5 +1,4 @@
 "use strict";
-//calbackfunction with its parameters
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -15,20 +14,22 @@ exports.retry = void 0;
 function retry(callback, parameters, retries, type) {
     return __awaiter(this, void 0, void 0, function* () {
         const retryCodes = [408, 500, 502, 503, 504, 522, 524];
-        return new Promise((resolve, reject) => {
-            return callback(parameters)
-                .then((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    type == 'axios' ? resolve(res.data) : resolve(res.json());
-                }
-                else if (retries > 0 && retryCodes.includes(res.status)) {
-                    console.log("re-Executing Request ,retryNo:", retries);
-                    return retry(callback, parameters, retries - 1, type);
-                }
-                else {
-                    return reject(res);
-                }
-            }).catch((error) => { console.log("hello"); reject(error); });
+        return callback(parameters)
+            .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+                return type ? res.data : res.json();
+            }
+            else if (retries > 0 && retryCodes.includes(res.status)) {
+                console.log("re-Executing Request ,retryNo:", retries);
+                return retry(callback, parameters, retries - 1, type);
+            }
+            else {
+                throw res;
+                // return reject(res);
+            }
+        })
+            .catch((error) => {
+            throw error;
         });
     });
 }

@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nodeFetchconfigConstructor = exports.axiosconfigConstructor = void 0;
-let newaxiosconfig = {
-    timeout: 5000,
+const newaxiosconfig = {
+    timeout: 5000
 };
-let newnodeconfig = {};
+const newnodeconfig = {};
 function axiosconfigConstructor(config) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const key in config) {
-            if (key == 'retry' || key == 'retries' || key == 'usage') {
+            if (key == "retry" || key == "retries" || key == "usage") {
                 continue;
             }
             newaxiosconfig[key] = config[key];
@@ -28,7 +28,7 @@ function axiosconfigConstructor(config) {
 exports.axiosconfigConstructor = axiosconfigConstructor;
 function fetchAbsolute(baseURL = "", url, params = {}) {
     let absoulte = baseURL.length > 0 ? baseURL + url : url;
-    absoulte += '?';
+    absoulte += "?";
     for (const key in params) {
         absoulte += `${key}=`;
         absoulte += params[key];
@@ -38,8 +38,8 @@ function fetchAbsolute(baseURL = "", url, params = {}) {
 function nodeFetchconfigConstructor(config) {
     return __awaiter(this, void 0, void 0, function* () {
         newnodeconfig.method = config.method;
-        config.method !== 'get' ? newnodeconfig.body = JSON.stringify(config.data) : "";
-        let timeout = config.timeout ? config.timeout : 5000;
+        config.method !== "get" ? (newnodeconfig.body = JSON.stringify(config.data)) : "";
+        const timeout = config.timeout || 5000;
         const url = fetchAbsolute(config.baseURL, config.url, config.params);
         return { url, newnodeconfig, timeout };
     });

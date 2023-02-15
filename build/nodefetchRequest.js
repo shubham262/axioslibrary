@@ -36,10 +36,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nodeFetchRequest = void 0;
+// import { Newfetchconfig } from "./configConstructor";
 const node_fetch_1 = __importDefault(require("node-fetch"));
 function nodeFetchRequest(object) {
     return __awaiter(this, void 0, void 0, function* () {
-        const AbortController = globalThis.AbortController || (yield Promise.resolve().then(() => __importStar(require('abort-controller'))));
+        const AbortController = globalThis.AbortController || (yield Promise.resolve().then(() => __importStar(require("abort-controller"))));
         const controller = new AbortController();
         object.newnodeconfig.signal = controller.signal;
         const timer = setTimeout(() => {
@@ -50,7 +51,7 @@ function nodeFetchRequest(object) {
             response = yield (0, node_fetch_1.default)(object.url, object.newnodeconfig);
         }
         catch (error) {
-            return { message: 'request was aborted', error, status: 500 };
+            return Promise.reject({ message: "request was aborted", error, status: 500 });
         }
         finally {
             clearTimeout(timer);

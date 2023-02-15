@@ -9,39 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bot = void 0;
+exports.Bot = void 0;
 const axiosRequest_1 = require("./axiosRequest");
 const configConstructor_1 = require("./configConstructor");
 const nodefetchRequest_1 = require("./nodefetchRequest");
-const Retry_1 = require("./Retry");
-function bot(config) {
+// import { retry } from "./Retry";
+const retryUpdated_1 = require("./retryUpdated");
+const logger_1 = require("./logger");
+function Bot(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const requestmethods = ['get', 'post', 'put', 'patch', 'delete'];
+        const requestmethods = ["get", "post", "put", "patch", "delete"];
         if (!requestmethods.includes(config.method)) {
             return { message: "pass correct method", status: 405 };
         }
         //true for axios
-        let state = true;
-        state = config.usage == 'axios' ? true : false;
+        const state = config.usage === "axios" ? true : false;
+        const retries = config.retries || 5;
+        const COMPUTED_CONFIG = state
+            ? yield (0, configConstructor_1.axiosconfigConstructor)(config)
+            : yield (0, configConstructor_1.nodeFetchconfigConstructor)(config);
+        const REQUIRED_FUNCTION = state ? axiosRequest_1.AxiosRequest : nodefetchRequest_1.nodeFetchRequest;
         let result;
-        let time = 0;
-        let id = setInterval(() => {
-            time++;
-        }, 1);
-        let retries = !config.retries ? 5 : config.retries;
-        let computedconfig = state ? yield (0, configConstructor_1.axiosconfigConstructor)(config) : yield (0, configConstructor_1.nodeFetchconfigConstructor)(config);
-        let requiredfunction = state ? axiosRequest_1.makeRequest : nodefetchRequest_1.nodeFetchRequest;
+        let time = Date.now();
         try {
-            result = yield (0, Retry_1.retry)(requiredfunction, computedconfig, retries, state ? "axios" : "node");
-            clearInterval(id);
-            console.table([{ method: config.method, url: config.url, date: new Date(), response: result, time: `${time}ms` }]);
+            result = yield (0, retryUpdated_1.retry)(REQUIRED_FUNCTION, COMPUTED_CONFIG, retries, state);
+            time = Date.now() - time;
+            yield (0, logger_1.logger)(config, time, result);
+            return result;
         }
         catch (error) {
-            clearInterval(id);
-            console.table([{ method: config.method, url: config.url, date: new Date(), response: { message: "requestFailed" }, time: `${time}ms` }]);
+            time = Date.now() - time;
+            yield (0, logger_1.logger)(config, time, { message: "requestFailed" });
             throw error;
         }
-        return result;
     });
 }
-exports.bot = bot;
+exports.Bot = Bot;

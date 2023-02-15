@@ -8,29 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AxiosRequest = void 0;
-const axios_1 = __importDefault(require("axios"));
-function AxiosRequest(config) {
+exports.logger = void 0;
+function logger(config, time, result) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const controller = new AbortController();
-        // config.signal=controller.signal
-        // const timer = setTimeout(() => {
-        //     controller.abort();
-        // }, config.timeout);
-        let result;
-        try {
-            result = yield (0, axios_1.default)(config);
-        }
-        catch (error) {
-            if (error.code === 'ECONNABORTED')
-                throw { message: "request failed", error, status: 500 };
-            throw error;
-        }
-        return result;
+        console.table([
+            {
+                method: config.method,
+                url: config.url,
+                date: new Date(),
+                response: result,
+                time: `${time}ms`
+            }
+        ]);
     });
 }
-exports.AxiosRequest = AxiosRequest;
+exports.logger = logger;

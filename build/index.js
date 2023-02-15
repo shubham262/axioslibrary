@@ -8,23 +8,23 @@ const library_1 = require("./library");
 const app = (0, express_1.default)();
 const config = {
     method: "get",
-    baseURL: "https://httpbin.org",
+    baseURL: "https://httpbin.org/",
     url: "/get",
-    data: { title: 'foo', body: 'bar', userId: 1, },
+    data: { title: "foo", body: "bar", userId: 1 },
     params: {
-        ID: 12345,
+        ID: 12345
     },
     retry: true,
     retries: 5,
     usage: "axios",
     timeout: 5000
 };
-(0, library_1.bot)(config)
-    .then((data) => console.log("got the response indexts,", data))
-    .catch((error) => console.log("I am in error,", error));
+(0, library_1.Bot)(config)
+    .then(data => console.log("got the response indexts,", data))
+    .catch(error => console.log("I am in error,", error));
 //wrap it inside async function
-//then we can write 
+//then we can write
 // const result= await bot(config)
-app.listen('3000', () => {
+app.listen("3000", () => {
     console.log("server running at port 3000");
 });
