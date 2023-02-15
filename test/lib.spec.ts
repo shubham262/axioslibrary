@@ -71,16 +71,7 @@ describe("testing the using http bin", function () {
         const result = await Bot(config);
         expect(result.args).to.deep.equal({ ID: "12345" });
     });
-// });
 
-// describe("testing the library", function ()
-// {
-    // it(" get method", async function () {
-    //     config.method = "get";
-    //     config.url = "/get";
-    //     const result = await Bot(config);
-    //     expect(result).to.be.an("object");
-    // });
 
     
 
