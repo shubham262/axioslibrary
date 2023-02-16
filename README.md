@@ -1,5 +1,5 @@
 # axioslibrary
-#### A library that can handle your all kind of request .It make use of Axios internally.A single place to handle all your request. It also notes the time in which yoour api sends the response,keep notes of all request and response and also has retrying feature,means if api fails,it will retry max 5 times
+#### A library that can handle your all kind of request .It make use of Axios and node-fetch internally to reduce your dependency on third party libraries.A single place to handle all your request. It also notes the time in which your api sends the response,keep notes of all request and response and also has retrying feature,means if api fails,it will retry certain number of  times (default 5)
 
 ### Github link:- https://github.com/shubham262/axioslibrary
 ### Package link:- https://www.npmjs.com/package/axioslibrary
